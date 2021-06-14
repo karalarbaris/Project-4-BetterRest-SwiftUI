@@ -24,6 +24,10 @@ struct ContentView: View {
         return Calendar.current.date(from: components) ?? Date()
     }
     
+    var bedTime: String {
+        return calculateBedTime2()
+    }
+    
     var body: some View {
         
         NavigationView {
@@ -50,13 +54,12 @@ struct ContentView: View {
                         }
                         
                     }
-                    //                    Stepper(value: $coffeeAmount, in: 0...20) {
-                    //                        if coffeeAmount == 1 {
-                    //                            Text("\(coffeeAmount) cup")
-                    //                        } else {
-                    //                            Text("\(coffeeAmount) cups")
-                    //                        }
-                    //                    }
+                }
+                
+                Section(header: Text("Your recommended bed time is...")) {
+                    Text(bedTime)
+                        .font(.largeTitle)
+                        .foregroundColor(Color(UIColor.systemOrange))
                 }
                 
                 
@@ -71,44 +74,7 @@ struct ContentView: View {
                 Alert(title: Text(alertTitle), message: Text(alertMessage), dismissButton: .default(Text("Okay")))
             }
         }
-        
-        
-        
-        
-        //        var components = DateComponents()
-        //        components.hour = 8
-        //        components.minute = 0
-        //        let date = Calendar.current.date(from: components) ?? Date()
-        
-        ///////////////
-        
-        //        let components = Calendar.current.dateComponents([.hour, .minute], from: wakeUp)
-        //        let hour = components.hour ?? 0
-        //        let minute = components.minute ?? 0
-        //        print("\(hour):\(minute)")
-        
-        ///////////////
-        
-        //        let formatter = DateFormatter()
-        //        formatter.timeStyle = .short
-        //        let dateString = formatter.string(from: Date())
-        //        print("\(dateString)")
-        
-        //        return DatePicker("Please enter a date", selection: $wakeUp, in: Date()...)
-        //            .labelsHidden()
-        
-        
-        //        VStack {
-        //
-        //            Stepper(value: $sleepAmount, in: 4...12, step: 0.25) {
-        //                Text("\(sleepAmount, specifier: "%g")")
-        //
-        //            }
-        //
-        //            DatePicker("Please enter a date", selection: $wakeUp, in: Date()...)
-        //                .labelsHidden()
-        //
-        //        }
+    
         
     }
     
@@ -134,6 +100,32 @@ struct ContentView: View {
             alertMessage = "Sorry, there was a problem calculating your bedtime."
         }
         showingAlert = true
+    }
+    
+    
+    func calculateBedTime2() -> String {
+        let model = SleepCalculator()
+        
+        let components = Calendar.current.dateComponents([.hour, .minute], from: wakeUp)
+        let hour = (components.hour ?? 0) * 60 * 60
+        let minute = (components.minute ?? 0) * 60
+        
+        do {
+            let prediction = try model.prediction(wake: Double(hour + minute), estimatedSleep: sleepAmount, coffee: Double(coffeeAmount))
+            let sleepTime = wakeUp - prediction.actualSleep
+            
+            let formatter = DateFormatter()
+            formatter.timeStyle = .short
+            return formatter.string(from: sleepTime)
+//            alertMessage = formatter.string(from: sleepTime)
+//            alertTitle = "Your ideal bedtime is..."
+            
+            
+        } catch  {
+            return "Error"
+//            alertTitle = "Error"
+//            alertMessage = "Sorry, there was a problem calculating your bedtime."
+        }
     }
     
 }
