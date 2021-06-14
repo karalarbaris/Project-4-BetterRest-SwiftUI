@@ -28,25 +28,20 @@ struct ContentView: View {
         
         NavigationView {
             Form {
-                VStack (alignment: .leading, spacing:0) {
-                    Text("When would you like to wake up?")
-                        .font(.headline)
+                
+                Section(header: Text("When would you like to wake up?")) {
                     DatePicker("Please enter a time", selection: $wakeUp, displayedComponents: .hourAndMinute)
                         .labelsHidden()
                         .datePickerStyle(WheelDatePickerStyle())
                 }
                 
-                VStack (alignment: .leading, spacing:0) {
-                    Text("Desired amount of sleep")
-                        .font(.headline)
+                Section(header: Text("Desired amount of sleep")) {
                     Stepper(value: $sleepAmount, in: 4...12, step: 0.25) {
                         Text("\(sleepAmount, specifier: "%g") hours")
                     }
                 }
                 
-                VStack (alignment: .leading, spacing:0) {
-                    Text("Daily coffee intake")
-                        .font(.headline)
+                Section(header: Text("Daily coffee intake")) {
                     Stepper(value: $coffeeAmount, in: 0...20) {
                         if coffeeAmount == 1 {
                             Text("\(coffeeAmount) cup")
@@ -55,11 +50,7 @@ struct ContentView: View {
                         }
                     }
                 }
-                
-                
-                
-                
-                
+               
                 
             }
             .navigationBarTitle("BetterRest")
