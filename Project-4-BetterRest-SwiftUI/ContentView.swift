@@ -42,15 +42,22 @@ struct ContentView: View {
                 }
                 
                 Section(header: Text("Daily coffee intake")) {
-                    Stepper(value: $coffeeAmount, in: 0...20) {
-                        if coffeeAmount == 1 {
-                            Text("\(coffeeAmount) cup")
-                        } else {
-                            Text("\(coffeeAmount) cups")
+                    
+                    Picker("Cup", selection: $coffeeAmount) {
+                        ForEach(0 ..< 21) {
+                            Text("\($0)")
                         }
+                        
                     }
+                    //                    Stepper(value: $coffeeAmount, in: 0...20) {
+                    //                        if coffeeAmount == 1 {
+                    //                            Text("\(coffeeAmount) cup")
+                    //                        } else {
+                    //                            Text("\(coffeeAmount) cups")
+                    //                        }
+                    //                    }
                 }
-               
+                
                 
             }
             .navigationBarTitle("BetterRest")
